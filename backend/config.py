@@ -25,7 +25,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 # Model for the general AI Assistant — fast, lightweight, good for Q&A.
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 
-# Model for Career Guidance — more capable model for deep, personalized
+# Model for Career Guidance — reliable, fast model for deep, personalized
 # resume-grounded career analysis and roadmap generation.
-GEMINI_CAREER_MODEL = os.getenv("GEMINI_CAREER_MODEL", "gemini-3.6-flash")
+GEMINI_CAREER_MODEL = os.getenv("GEMINI_CAREER_MODEL", "gemini-3.5-flash")
 
