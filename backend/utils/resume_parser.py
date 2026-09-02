@@ -41,9 +41,9 @@ FUZZY_WORDS = []
 try:
     with open(FUZZY_SKILLS_FILE, "r", encoding="utf-8") as f:
         FUZZY_WORDS = [word.strip().lower() for word in f.readlines() if word.strip()]
-    print(f"✅ Loaded {len(FUZZY_WORDS)} fuzzy skills")
+    print(f"[OK] Loaded {len(FUZZY_WORDS)} fuzzy skills")
 except:
-    print("⚠ fuzzy_skills.txt missing")
+    print("[WARN] fuzzy_skills.txt missing")
 
 
 # -------------------------------------------------------------
@@ -110,9 +110,9 @@ def load_entity_ruler():
         ruler = nlp.add_pipe("entity_ruler", config={"overwrite_ents": True}, before="ner")
         try:
             ruler.from_disk(SKILLS_FILE_PATH)
-            print("✅ Loaded skills.jsonl into EntityRuler")
+            print("[OK] Loaded skills.jsonl into EntityRuler")
         except:
-            print("⚠ skills.jsonl missing")
+            print("[WARN] skills.jsonl missing")
     return nlp
 
 
@@ -172,7 +172,7 @@ def parse_resume(raw_text):
     all_skills = exact_skills.union(regex_skills)
     final_skills = sorted({s for s in all_skills if s in TECH_SKILLS})
 
-    print("🔍 FINAL EXTRACTED SKILLS:", final_skills)
+    print("[INFO] FINAL EXTRACTED SKILLS:", final_skills)
 
     return {
         "skills": final_skills,

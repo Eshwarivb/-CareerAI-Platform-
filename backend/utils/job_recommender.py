@@ -6,7 +6,7 @@ try:
     from config import RAPIDAPI_KEY
 except:
     RAPIDAPI_KEY = None
-    print("⚠ RAPIDAPI_KEY missing. Check .env + config.py")
+    print("[WARN] RAPIDAPI_KEY missing. Check .env + config.py")
 
 
 # ----------------------------------------------------------
@@ -38,7 +38,7 @@ def normalize_skills(skills):
 def get_jobs(skills, location, experience_level):
 
     if not RAPIDAPI_KEY:
-        print("❌ Missing API Key")
+        print("[ERROR] Missing API Key")
         return []
 
     # 1. Normalize
@@ -79,28 +79,19 @@ def get_jobs(skills, location, experience_level):
     # MAIN QUERY (uses top 3 skills)
     # -----------------------------------------------------------------
     main_query = f"{', '.join(top_skills)} developer {exp_query} jobs in {location}"
-    print("\n🔍 FINAL JOB QUERY:", main_query)
-
+    print("[INFO] FINAL JOB QUERY:", main_query)
     jobs = fetch_jobs(main_query, location)
-
-
-    # -----------------------------------------------------------------
-    # ⭐ FALLBACK LOGIC — OPTION C (Based on top 3)
-    # -----------------------------------------------------------------
     if not jobs:
         fallback1 = f"{top_skills[0]} developer {exp_query} jobs in {location}"
-        print("🔁 FALLBACK 1:", fallback1)
+        print("[INFO] FALLBACK 1:", fallback1)
         jobs = fetch_jobs(fallback1, location)
-
     if not jobs and len(top_skills) > 1:
         fallback2 = f"{top_skills[1]} developer {exp_query} jobs in {location}"
-        print("🔁 FALLBACK 2:", fallback2)
+        print("[INFO] FALLBACK 2:", fallback2)
         jobs = fetch_jobs(fallback2, location)
-
-    # Guaranteed fallback
     if not jobs:
         fallback3 = f"software developer {exp_query} jobs in {location}"
-        print("🔁 FALLBACK 3 (Guaranteed):", fallback3)
+        print("[INFO] FALLBACK 3 (Guaranteed):", fallback3)
         jobs = fetch_jobs(fallback3, location)
 
     # 4. Score + sort by how well each job matches the user's skill set
@@ -181,6 +172,6 @@ def fetch_jobs(query, location):
             })
 
     except Exception as e:
-        print("❌ Error fetching jobs:", e)
+        print("[ERROR] Error fetching jobs:", e)
 
     return jobs
