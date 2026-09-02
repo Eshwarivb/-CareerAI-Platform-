@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Resume Analyzer & Job Recommender</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #f8fafc;
+      min-height: 100vh;
+      background: url("https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1600&q=80")
+        no-repeat center center/cover;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(31, 41, 55, 0.7);
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-main {
+      background: linear-gradient(90deg, #2563eb, #06b6d4);
+      color: white;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 12px 24px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+    }
+
+    .btn-main:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(6, 182, 212, 0.6);
+    }
+
+    .icon {
+      width: 55px;
+      height: 55px;
+      margin: 0 auto 1rem;
+      filter: brightness(0) invert(1);
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="content flex flex-col items-center justify-center px-4">
+
+    <!-- ✅ LOGO ON TOP -->
+    <header class="text-center py-10">
+      <img 
+        src="logo3.jpg" 
+        alt="Smart Resume Analyzer Logo" 
+        class="w-28 h-28 rounded-full shadow-lg border border-white/30 mx-auto mb-4"
+      >
+    
+      <!-- ✅ HEADING BELOW LOGO -->
+      <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3">
+         Resume Analysis and Job Recommendations
+      </h1>
+
+      <p class="text-gray-300 max-w-2xl mx-auto">
+        Unlock your career potential with AI-driven resume insights and personalized job suggestions.
+      </p>
+    </header>
+
+    <!-- ✅ BUTTONS -->
+    <div class="text-center mb-10">
+      <a href="login.html" class="btn-main mx-2">Login</a>
+      <a href="signup.html" class="btn-main mx-2">Sign Up</a>
+    </div>
+
+    <!-- ✅ THREE FEATURE CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center max-w-6xl">
+      <!-- Upload Resume -->
+      <div class="glass-card p-6">
+        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Upload Resume" class="icon">
+        <h3 class="text-xl font-semibold mb-2">1️⃣ Upload Your Resume</h3>
+        <p class="text-gray-200">
+          Upload your resume in PDF or DOCX format. Our AI reads and extracts your skills, education, and experience.
+        </p>
+      </div>
+
+      <!-- Resume Analysis -->
+      <div class="glass-card p-6">
+        <img src="https://cdn-icons-png.flaticon.com/512/2920/2920345.png" alt="AI Resume Analysis" class="icon">
+        <h3 class="text-xl font-semibold mb-2">2️⃣ Resume Analysis</h3>
+        <p class="text-gray-200">
+          Advanced AI evaluates your resume to highlight strengths, detect skill gaps, and suggest optimizations.
+        </p>
+      </div>
+
+      <!-- Job Recommendation -->
+      <div class="glass-card p-6">
+        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Job Recommendation" class="icon">
+        <h3 class="text-xl font-semibold mb-2">3️⃣ Job Recommendations</h3>
+        <p class="text-gray-200">
+          Get job recommendations tailored to your expertise, career goals, and preferred work location.
+        </p>
+      </div>
+    </div>
+
+    <!-- ✅ FOOTER -->
+    <footer class="text-center mt-12 mb-6 text-gray-400 text-sm">
+      © 2025  Resume Analysis & Job Recommendations | Powered by AI 🚀
+    </footer>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

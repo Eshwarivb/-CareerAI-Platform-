@@ -1,0 +1,29 @@
+# Environment variables (Sensitive API keys)
+.env
+*.env
+backend/.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+ENV/
+backend/venv/
+backend/__pycache__/
+
+# Uploaded files
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Testing / Temporary
+test_report.json
+*.log
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

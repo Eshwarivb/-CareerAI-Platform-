@@ -1,0 +1,46 @@
+python
+java
+javascript
+js
+html
+html5
+css
+css3
+bootstrap
+tailwind
+react
+react js
+reactjs
+node
+node js
+nodejs
+node.js
+express
+express js
+expressjs
+express.js
+rest api
+rest apis
+api
+sql
+mysql
+postgresql
+mongodb
+mongo db
+git
+github
+vscode
+docker
+kubernetes
+aws
+azure
+pandas
+numpy
+machine learning
+data analysis
+flask
+django
+c
+c++
+cpp
+ejs

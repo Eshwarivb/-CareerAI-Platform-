@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — CareerAI Platform</title>
+  <meta name="description" content="Your AI-powered career platform dashboard — analyze resumes, explore jobs, and get career guidance." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     APP SHELL
+════════════════════════════════════════════════════════════ -->
+<div class="app-shell">
+
+  <!-- ── Sidebar Overlay (mobile) ────────────────────────── -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div class="sidebar-logo-text">
+        <span class="sidebar-logo-name">CareerAI</span>
+        <span class="sidebar-logo-tagline">AI Career Platform</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggleBtn" title="Collapse sidebar">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav" id="sidebarNav">
+      <!-- Built by app.js -->
+    </nav>
+
+    <!-- Footer logout handled by nav -->
+    <div class="sidebar-footer" id="sidebarFooter"></div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════
+       MAIN AREA
+  ══════════════════════════════════════════════════════ -->
+  <div class="main-area" id="mainArea">
+
+    <!-- ── Top Header ───────────────────────────────────── -->
+    <header class="app-header">
+      <div class="header-left">
+        <!-- Hamburger (mobile only) -->
+        <button class="hamburger-btn" id="hamburgerBtn" title="Open menu">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <span class="breadcrumb-home">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </span>
+          <span class="breadcrumb-sep">
+            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+          <span class="breadcrumb-current" id="breadcrumbCurrent">Dashboard</span>
+        </nav>
+      </div>
+
+      <div class="header-right">
+        <!-- Notifications -->
+        <button class="header-icon-btn" title="Notifications" id="notifBtn">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+
+        <div class="header-divider"></div>
+
+        <!-- User Menu -->
+        <div class="user-menu">
+          <button class="user-btn" id="userMenuBtn" aria-haspopup="true" aria-expanded="false">
+            <div class="user-avatar">U</div>
+            <span class="user-name" id="headerUserName">User</span>
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+
+          <div class="user-dropdown" id="userDropdown" role="menu">
+            <div style="padding:10px 12px 8px;border-bottom:1px solid var(--color-border);margin-bottom:4px">
+              <div class="font-600" id="dropdownUserName" style="font-size:0.9rem"></div>
+              <div class="text-xs text-muted" id="dropdownUserEmail"></div>
+            </div>
+            <button class="dropdown-item" id="dropdownProfileLink" role="menuitem">
+              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              View Profile
+            </button>
+            <button class="dropdown-item" id="dropdownSettingsLink" role="menuitem">
+              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Settings
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item danger" id="headerLogoutBtn" role="menuitem">
+              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Page Content ──────────────────────────────────── -->
+    <main class="page-content">
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION: DASHBOARD
+══════════════════════════════════════════════════════════ -->
+<section class="section-panel" id="section-dashboard">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-subtitle">Welcome back — here is an overview of your career activity.</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-primary" onclick="navigateTo('resumes')">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        Upload Resume
+      </button>
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stat-grid" id="dashStats">
+    <!-- Rendered by dashboard.js -->
+    <div class="stat-card"><div class="skeleton" style="width:100%;height:80px;border-radius:8px"></div></div>
+    <div class="stat-card"><div class="skeleton" style="width:100%;height:80px;border-radius:8px"></div></div>
+    <div class="stat-card"><div class="skeleton" style="width:100%;height:80px;border-radius:8px"></div></div>
+    <div class="stat-card"><div class="skeleton" style="width:100%;height:80px;border-radius:8px"></div></div>
+  </div>
+
+  <!-- Recent Resumes -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Recent Resumes</div>
+        <div class="card-subtitle">Your latest uploaded and analyzed resumes</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="navigateTo('resumes')">View all</button>
+    </div>
+    <div id="dashRecentResumes">
+      <div class="skeleton" style="width:100%;height:60px;border-radius:8px"></div>
+    </div>
+  </div>
+
+  <!-- Recent Jobs -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Recommended Jobs</div>
+        <div class="card-subtitle">Based on your latest resume analysis</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="navigateTo('jobs')">View all</button>
+    </div>
+    <div id="dashRecentJobs">
+      <div class="skeleton" style="width:100%;height:120px;border-radius:8px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION: MY RESUMES
+══════════════════════════════════════════════════════════ -->
+<section class="section-panel" id="section-resumes">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">My Resumes</h1>
+      <p class="page-subtitle">Upload, analyze, and manage your resumes.</p>
+    </div>
+  </div>
+
+  <!-- Upload Card -->
+  <div class="card mb-6">
+    <div class="card-header">
+      <div class="card-title">Upload & Analyze Resume</div>
+    </div>
+    <div class="grid-2" style="gap:24px;align-items:start">
+      <div>
+        <div class="upload-zone" id="resumeUploadZone" style="position:relative">
+          <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx" style="position:absolute;opacity:0;width:0;height:0" />
+          <div class="upload-icon">
+            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+          </div>
+          <div class="upload-text">Drop your resume here or <span class="upload-btn-label">browse</span></div>
+          <div class="upload-hint">PDF or DOCX &bull; Max 10 MB</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;padding-top:8px">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label" for="resumeLocationInput">Preferred Job Location</label>
+          <input id="resumeLocationInput" type="text" class="form-input" placeholder="e.g. Bengaluru, Mumbai, Remote" />
+        </div>
+        <button id="resumeAnalyzeBtn" class="btn btn-primary" disabled>
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Analyze Resume
+        </button>
+        <div id="resumeAnalysisStatus" class="text-sm text-muted" style="display:none">Analyzing, please wait...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analysis Result -->
+  <div id="resumeAnalysisResult" style="display:none; margin-bottom:24px"></div>
+
+  <!-- Resumes List -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">All Resumes</div>
+    </div>
+    <div id="resumesList"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION: ATS ANALYZER
+══════════════════════════════════════════════════════════ -->
+<section class="section-panel" id="section-ats">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">ATS Analyzer</h1>
+      <p class="page-subtitle">Check how well your resume passes Applicant Tracking Systems for a specific job.</p>
+    </div>
+  </div>
+
+  <div class="grid-2" style="gap:24px;align-items:start;margin-bottom:24px">
+    <div class="card">
+      <div class="card-title mb-4">Upload Resume</div>
+      <div class="upload-zone" id="atsUploadZone" style="position:relative">
+        <input type="file" id="atsFileInput" accept=".pdf,.doc,.docx" style="position:absolute;opacity:0;width:0;height:0" />
+        <div class="upload-icon">
+          <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        </div>
+        <div class="upload-text">Drop resume here or <span class="upload-btn-label">browse</span></div>
+        <div class="upload-hint">PDF or DOCX</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title mb-4">Job Description</div>
+      <form id="atsForm" data-bound="">
+        <div class="form-group">
+          <label class="form-label" for="atsJobDescription">Paste the target job description <span class="required">*</span></label>
+          <textarea id="atsJobDescription" class="form-textarea" style="min-height:160px" placeholder="Copy and paste the full job description here..."></textarea>
+        </div>
+        <button type="submit" id="atsSubmitBtn" class="btn btn-primary btn-full">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Check ATS Score
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div id="atsLoading" style="display:none;justify-content:center;padding:40px;gap:12px;color:var(--color-text-muted)">
+    <div class="skeleton" style="width:100%;height:320px;border-radius:14px"></div>
+  </div>
+  <div id="atsResult"></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION: JOB RECOMMENDATIONS
+══════════════════════════════════════════════════════════ -->
+<section class="section-panel" id="section-jobs">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Job Recommendations</h1>
+      <p class="page-subtitle">Jobs matched to your skills from your latest resume analysis.</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card mb-4" style="padding:16px 20px">
+    <div class="flex items-center gap-3 flex-wrap">
+      <div style="flex:1;min-width:200px">
+        <input id="jobSkillFilter" type="text" class="form-input" style="margin:0" placeholder="Search by title, company, or skill..." />
+      </div>
+      <select id="jobSortBy" class="form-select" style="width:auto;margin:0">
+        <option value="match">Sort by Match %</option>
+        <option value="recent">Sort by Recent</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="jobsGrid"></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION: SAVED JOBS
+══════════════════════════════════════════════════════════ -->
+<section class="section-panel" id="section-saved-jobs">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Saved Jobs</h1>
+      <p class="page-subtitle">Jobs you have bookmarked for later review.</p>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="navigateTo('jobs')">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      Browse Jobs
+    </button>
+  </div>
+  <div id="savedJobsGrid"></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION: APPLICATIONS
+══════════════════════════════════════════════════════════ -->
+<section class="section-panel" id="section-applications">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Applications</h1>
+      <p class="page-subtitle">Track the status of your job applications.</p>
+    </div>
+  </div>
+  <div id="applicationsContainer"></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION: CAREER GUIDANCE
+══════════════════════════════════════════════════════════ -->
+<section class="section-panel" id="section-career">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Career Guidance</h1>
+      <p class="page-subtitle">Personalized career coaching grounded in your actual resume skills and experience.</p>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="clearCareerChat()">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+      New Session
+    </button>
+  </div>
+
+  <div class="grid-2" style="gap:24px;align-items:start">
+    <!-- Resume selection panel -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div class="card-title mb-4">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:inline;margin-right:6px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Select Resume
+        </div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label class="form-label">Previously analyzed resume</label>
+          <select id="careerResumeSelect" class="form-select"></select>
+        </div>
+        <div id="careerContextPreview" style="display:none"></div>
+
+        <div class="divider" style="margin:16px 0"></div>
+
+        <div class="card-subtitle mb-3">Or upload a new resume</div>
+        <div class="upload-zone" id="careerUploadZone" style="padding:24px 16px;position:relative">
+          <input type="file" id="careerFileInput" accept=".pdf,.doc,.docx" style="position:absolute;opacity:0;width:0;height:0" />
+          <div class="upload-icon" style="width:32px;height:32px;margin:0 auto 8px">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+          </div>
+          <div class="upload-text" style="font-size:0.875rem">Drop file or <span class="upload-btn-label">browse</span></div>
+          <div class="upload-hint">PDF or DOCX</div>
+        </div>
+        <button id="careerAnalyzeNewBtn" class="btn btn-secondary btn-full mt-3" disabled>
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Analyze New Resume
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="card-title mb-3">Target Role</div>
+        <input id="careerTargetRole" type="text" class="form-input" placeholder="e.g. Data Analyst, Full Stack Developer" />
+        <div class="form-hint">Specify your target role for more focused guidance.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title mb-3">Suggested Questions</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="chat-suggestion-chip" data-msg="What career paths suit my skills?" style="text-align:left">What career paths suit my skills?</button>
+          <button class="chat-suggestion-chip" data-msg="What skills am I missing for this role?" style="text-align:left">What skills am I missing for this role?</button>
+          <button class="chat-suggestion-chip" data-msg="Give me a 6-month learning roadmap." style="text-align:left">Give me a 6-month learning roadmap.</button>
+          <button class="chat-suggestion-chip" data-msg="How do I transition to my target role?" style="text-align:left">How do I transition to my target role?</button>
+          <button class="chat-suggestion-chip career-chip" data-msg="What are the most in-demand skills in my field?" style="text-align:left">What are the most in-demand skills in my field?</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat panel -->
+    <div class="chat-container">
+      <div class="chat-messages" id="careerChatMessages">
+        <div class="chat-bubble-wrap bot">
+          <div class="chat-avatar bot-avatar">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+          </div>
+          <div class="chat-bubble bot">Hello! I am your career guidance coach. Select a resume above and tell me the target role you are aiming for. I will give you personalized career advice grounded in your actual skills.</div>
+        </div>
+      </div>
+      <div class="chat-footer">
+        <div class="chat-input-wrap">
+          <textarea id="careerChatInput" class="chat-input" placeholder="Ask about your career path..." rows="1"></textarea>
+          <button id="careerSendBtn" class="btn btn-primary btn-icon" title="Send">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION: AI ASSISTANT
+══════════════════════════════════════════════════════════ -->
+<section class="section-panel" id="section-assistant">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">AI Assistant</h1>
+      <p class="page-subtitle">Get general help with resumes, career questions, interviews, and job applications.</p>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="clearAssistantChat()">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+      New Chat
+    </button>
+  </div>
+
+  <div style="display:flex;gap:24px;align-items:flex-start">
+    <!-- Suggestions sidebar -->
+    <div style="width:240px;flex-shrink:0;display:flex;flex-direction:column;gap:12px">
+      <div class="card">
+        <div class="card-title mb-3">Try asking...</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="chat-suggestion-chip assistant-chip" data-msg="How do I write a strong resume summary?" style="text-align:left">How do I write a strong resume summary?</button>
+          <button class="chat-suggestion-chip assistant-chip" data-msg="How can I prepare for a technical interview?" style="text-align:left">How can I prepare for a technical interview?</button>
+          <button class="chat-suggestion-chip assistant-chip" data-msg="What is the best format for a fresher resume?" style="text-align:left">What format is best for a fresher resume?</button>
+          <button class="chat-suggestion-chip assistant-chip" data-msg="How do I negotiate a job offer?" style="text-align:left">How do I negotiate a job offer?</button>
+          <button class="chat-suggestion-chip assistant-chip" data-msg="What should I include in a cover letter?" style="text-align:left">What should I include in a cover letter?</button>
+          <button class="chat-suggestion-chip assistant-chip" data-msg="How do I explain a career gap in an interview?" style="text-align:left">How do I explain a career gap?</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat window -->
+    <div class="chat-container" style="flex:1">
+      <div class="chat-messages" id="assistantMessages">
+        <div class="chat-bubble-wrap bot">
+          <div class="chat-avatar bot-avatar">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+          </div>
+          <div class="chat-bubble bot">Hello! I am your AI career assistant. I can help with resume writing tips, interview preparation, job search strategies, career advice, and more. What would you like to know?</div>
+        </div>
+      </div>
+      <div class="chat-footer">
+        <div class="chat-input-wrap">
+          <textarea id="assistantInput" class="chat-input" placeholder="Ask anything about your career..." rows="1"></textarea>
+          <button id="assistantSendBtn" class="btn btn-primary btn-icon" title="Send">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION: PROFILE
+══════════════════════════════════════════════════════════ -->
+<section class="section-panel" id="section-profile">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Profile</h1>
+      <p class="page-subtitle">Manage your personal and professional information.</p>
+    </div>
+    <button class="btn btn-primary" id="profileSaveBtn">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save Changes
+    </button>
+  </div>
+
+  <!-- Profile header -->
+  <div class="card mb-4">
+    <div class="profile-header">
+      <div class="profile-avatar-lg profile-avatar-text">U</div>
+      <div style="flex:1">
+        <div style="font-size:1.25rem;font-weight:700;color:var(--color-text-primary)" id="profileDisplayNameLabel">Your Name</div>
+        <div class="text-muted text-sm mt-1" id="profileEmailLabel"></div>
+        <div class="completion-bar mt-3">
+          <div style="flex:1">
+            <div class="progress-bar">
+              <div class="progress-fill" id="profileCompletionBar" style="width:0%"></div>
+            </div>
+          </div>
+          <span class="completion-pct" id="profileCompletionPct">0%</span>
+          <span class="text-xs text-muted">Profile complete</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Personal Info -->
+    <div class="card">
+      <div class="card-title mb-5">Personal Information</div>
+      <div class="form-group">
+        <label class="form-label" for="profileDisplayName">Full Name</label>
+        <input id="profileDisplayName" type="text" class="form-input" placeholder="Your full name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="profileEmail">Email Address</label>
+        <input id="profileEmail" type="email" class="form-input" readonly style="background:var(--color-bg);cursor:not-allowed" />
+        <div class="form-hint">Email is tied to your account and cannot be changed.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="profile_phone">Phone Number</label>
+        <input id="profile_phone" type="tel" class="form-input" placeholder="+91 98765 43210" />
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label" for="profile_location">Location</label>
+        <input id="profile_location" type="text" class="form-input" placeholder="City, Country" />
+      </div>
+    </div>
+
+    <!-- Professional Info -->
+    <div class="card">
+      <div class="card-title mb-5">Professional Information</div>
+      <div class="form-group">
+        <label class="form-label" for="profile_education">Education</label>
+        <input id="profile_education" type="text" class="form-input" placeholder="e.g. B.Tech Computer Science, VTU 2024" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="profile_skills_list">Key Skills</label>
+        <input id="profile_skills_list" type="text" class="form-input" placeholder="Python, React, Machine Learning..." />
+        <div class="form-hint">Comma-separated list of your top skills.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="profile_linkedin">LinkedIn Profile</label>
+        <input id="profile_linkedin" type="url" class="form-input" placeholder="https://linkedin.com/in/yourprofile" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="profile_github">GitHub Profile</label>
+        <input id="profile_github" type="url" class="form-input" placeholder="https://github.com/yourusername" />
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label" for="profile_portfolio">Portfolio / Website</label>
+        <input id="profile_portfolio" type="url" class="form-input" placeholder="https://yourportfolio.com" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION: SETTINGS
+══════════════════════════════════════════════════════════ -->
+<section class="section-panel" id="section-settings">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Settings</h1>
+      <p class="page-subtitle">Manage your account preferences and application settings.</p>
+    </div>
+  </div>
+
+  <div class="settings-grid">
+    <!-- Settings navigation -->
+    <div class="settings-nav">
+      <button class="settings-nav-item active" data-tab="account">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Account
+      </button>
+      <button class="settings-nav-item" data-tab="password">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Password
+      </button>
+      <button class="settings-nav-item" data-tab="notifications">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Notifications
+      </button>
+      <button class="settings-nav-item" data-tab="appearance">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        Appearance
+      </button>
+      <button class="settings-nav-item" data-tab="privacy">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Privacy
+      </button>
+    </div>
+
+    <!-- Settings panels -->
+    <div>
+      <!-- Account -->
+      <div class="settings-section card active" id="settings-account">
+        <div class="card-title mb-1">Account Information</div>
+        <div class="card-subtitle mb-4">Your basic account details</div>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Email Address</div>
+            <div class="settings-row-desc" id="settingsEmail">—</div>
+          </div>
+          <span class="badge badge-success">Verified</span>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Account Type</div>
+            <div class="settings-row-desc">Standard User</div>
+          </div>
+          <span class="badge badge-info">Free Plan</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="settings-section card" id="settings-password">
+        <div class="card-title mb-1">Change Password</div>
+        <div class="card-subtitle mb-4">Update your account password</div>
+        <form id="passwordChangeForm" data-bound="">
+          <div class="form-group">
+            <label class="form-label" for="currentPassword">Current Password</label>
+            <input id="currentPassword" type="password" class="form-input" placeholder="Enter current password" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="newPassword">New Password</label>
+            <input id="newPassword" type="password" class="form-input" placeholder="At least 6 characters" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="confirmNewPassword">Confirm New Password</label>
+            <input id="confirmNewPassword" type="password" class="form-input" placeholder="Re-enter new password" />
+          </div>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </form>
+      </div>
+
+      <!-- Notifications -->
+      <div class="settings-section card" id="settings-notifications">
+        <div class="card-title mb-1">Notification Preferences</div>
+        <div class="card-subtitle mb-4">Manage how you receive updates</div>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Email Notifications</div>
+            <div class="settings-row-desc">Receive updates via email</div>
+          </div>
+          <label class="toggle-wrap">
+            <input type="checkbox" id="notif_email" checked />
+            <div class="toggle-track"></div>
+          </label>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">New Job Alerts</div>
+            <div class="settings-row-desc">Get notified about new matching jobs</div>
+          </div>
+          <label class="toggle-wrap">
+            <input type="checkbox" id="notif_jobs" checked />
+            <div class="toggle-track"></div>
+          </label>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Platform Updates</div>
+            <div class="settings-row-desc">News about new features and improvements</div>
+          </div>
+          <label class="toggle-wrap">
+            <input type="checkbox" id="notif_updates" />
+            <div class="toggle-track"></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Appearance -->
+      <div class="settings-section card" id="settings-appearance">
+        <div class="card-title mb-1">Appearance</div>
+        <div class="card-subtitle mb-4">Customize how the platform looks</div>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Dark Mode</div>
+            <div class="settings-row-desc">Switch between light and dark theme</div>
+          </div>
+          <label class="toggle-wrap">
+            <input type="checkbox" id="darkModeToggle" />
+            <div class="toggle-track"></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Privacy -->
+      <div class="settings-section card" id="settings-privacy">
+        <div class="card-title mb-1">Privacy &amp; Data</div>
+        <div class="card-subtitle mb-4">Manage your data and account</div>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-label">Resume Data Storage</div>
+            <div class="settings-row-desc">Resume analysis results are stored in your browser only</div>
+          </div>
+          <span class="badge badge-neutral">Local Only</span>
+        </div>
+        <div class="settings-row" style="border:none">
+          <div class="settings-row-info">
+            <div class="settings-row-label" style="color:var(--color-danger)">Delete Account</div>
+            <div class="settings-row-desc">Permanently clear all your data from this browser</div>
+          </div>
+          <button class="btn btn-danger btn-sm" id="deleteAccountBtn">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    </main><!-- /page-content -->
+  </div><!-- /main-area -->
+</div><!-- /app-shell -->
+
+<!-- ── Toast Container ──────────────────────────────────── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ── Delete Account Modal ─────────────────────────────── -->
+<div class="modal-overlay" id="deleteAccountModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--color-danger)">Delete Account</div>
+      <button class="modal-close" id="cancelDeleteBtn">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <p class="text-sm" style="color:var(--color-text-secondary)">This will permanently clear all your local data including saved resumes, jobs, applications, and profile information. This action cannot be undone.</p>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancelDeleteBtnFooter" onclick="document.getElementById('deleteAccountModal').classList.remove('open')">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn">Delete My Data</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Scripts ───────────────────────────────────────────── -->
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/resumes.js"></script>
+<script src="js/ats.js"></script>
+<script src="js/jobs.js"></script>
+<script src="js/career.js"></script>
+<script src="js/assistant.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/settings.js"></script>
+
+<script>
+  // Populate settings account email
+  document.addEventListener("DOMContentLoaded", () => {
+    const settingsEmail = document.getElementById("settingsEmail");
+    if (settingsEmail) settingsEmail.textContent = getUserEmail() || "Not available";
+  });
+
+  // Auto-resize chat inputs
+  document.querySelectorAll(".chat-input").forEach(ta => {
+    ta.addEventListener("input", () => {
+      ta.style.height = "auto";
+      ta.style.height = Math.min(ta.scrollHeight, 120) + "px";
+    });
+  });
+</script>
+</body>
+</html>

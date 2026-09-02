@@ -1,0 +1,12 @@
+Flask
+flask-cors
+pymongo
+python-dotenv
+pdfminer.six
+spacy
+docx2txt
+requests
+nltk
+scikit-learn
+pandas
+PyJWT

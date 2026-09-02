@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — CareerAI Platform</title>
+  <meta name="description" content="Sign in to CareerAI — your AI-powered resume analysis and career guidance platform." />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .auth-msg {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .auth-msg-error { background: var(--color-danger-light); color: var(--color-danger); }
+    .auth-msg-success { background: var(--color-success-light); color: var(--color-success); }
+    .pwd-strength-wrap { margin-top: -12px; margin-bottom: 16px; }
+    .pwd-strength-track {
+      height: 4px;
+      background: var(--color-border);
+      border-radius: var(--radius-full);
+      margin-bottom: 4px;
+    }
+    .pwd-strength-bar {
+      height: 100%;
+      width: 0;
+      border-radius: var(--radius-full);
+      transition: width 0.3s, background 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-page">
+    <!-- Left decorative panel -->
+    <div class="auth-panel-left">
+      <div class="auth-left-content">
+        <div class="auth-left-logo">
+          <div class="auth-left-logo-icon">
+            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <span class="auth-left-logo-name">CareerAI</span>
+        </div>
+
+        <h1 class="auth-heading">Advance your career with AI</h1>
+        <p class="auth-subheading">Upload your resume, get ATS scores, discover matching jobs, and receive personalized career guidance — all in one professional platform.</p>
+
+        <div class="auth-features">
+          <div class="auth-feature">
+            <div class="auth-feature-icon">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            AI-powered ATS score analysis
+          </div>
+          <div class="auth-feature">
+            <div class="auth-feature-icon">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            Personalized job recommendations
+          </div>
+          <div class="auth-feature">
+            <div class="auth-feature-icon">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            </div>
+            Career roadmap and guidance
+          </div>
+          <div class="auth-feature">
+            <div class="auth-feature-icon">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            24/7 AI career assistant
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right login form -->
+    <div class="auth-panel-right">
+      <div class="auth-form-card">
+        <h2 class="auth-form-title">Welcome back</h2>
+        <p class="auth-form-subtitle">Sign in to your CareerAI account</p>
+
+        <div id="loginError" class="auth-msg"></div>
+
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="loginEmail">Email address <span class="required">*</span></label>
+            <input id="loginEmail" type="email" class="form-input" placeholder="you@example.com" autocomplete="email" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="loginPassword">Password <span class="required">*</span></label>
+            <div class="input-with-icon">
+              <input id="loginPassword" type="password" class="form-input" placeholder="Enter your password" autocomplete="current-password" required />
+              <span class="input-icon-right" id="toggleLoginPwd">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </span>
+            </div>
+          </div>
+
+          <button type="submit" id="loginBtn" class="btn btn-primary btn-full btn-lg">
+            Sign In
+          </button>
+        </form>
+
+        <p class="auth-footer-link">
+          Don't have an account? <a href="signup.html">Create one free</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

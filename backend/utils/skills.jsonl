@@ -1,0 +1,19 @@
+{"label": "SKILL", "pattern": [{"LOWER": "python"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "javascript"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "html"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "css"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "bootstrap"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "react"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "react"}, {"LOWER": "js"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "node"}, {"LOWER": "js"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "express"}, {"LOWER": "js"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "ejs"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "rest"}, {"LOWER": "api"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "sql"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "mysql"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "mongodb"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "git"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "github"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "vscode"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "c"}]}
+{"label": "SKILL", "pattern": [{"LOWER": "c++"}]}
