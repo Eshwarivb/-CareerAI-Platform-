@@ -19,8 +19,8 @@ try:
     from config import GEMINI_API_KEY, GEMINI_MODEL, GEMINI_CAREER_MODEL
 except ImportError:
     GEMINI_API_KEY = None
-    GEMINI_MODEL = "gemini-2.5-flash-lite"
-    GEMINI_CAREER_MODEL = "gemini-2.5-flash"
+    GEMINI_MODEL = "gemini-3.5-flash-lite"
+    GEMINI_CAREER_MODEL = "gemini-3.6-flash"
 
 # Base URL template — model is substituted per-call
 GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"

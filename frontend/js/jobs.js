@@ -4,6 +4,16 @@
 
 const APP_STATUSES = ["Saved", "Applied", "Under Review", "Interview", "Offer", "Rejected"];
 
+// Global Job Store to avoid JSON escaping issues in inline HTML onclick attributes
+window.jobCache = window.jobCache || {};
+
+function cacheJob(job) {
+  if (!job || (!job.url && !job.title)) return "";
+  const key = job.url || `${job.title}_${job.company}`;
+  window.jobCache[key] = job;
+  return key;
+}
+
 window.init_jobs = function () { renderJobsPage(); };
 window["init_saved-jobs"] = function () { renderSavedJobsPage(); };
 window.init_applications = function () { renderApplicationsPage(); };
@@ -53,6 +63,7 @@ function buildJobCard(job) {
   const matchClass = matchPct >= 70 ? "badge-success" : matchPct >= 40 ? "badge-warning" : "badge-neutral";
   const saved = getStoredSavedJobs();
   const isSaved = saved.some(s => s.url === job.url);
+  const key = cacheJob(job);
 
   return `
     <div class="job-card fade-in">
@@ -71,35 +82,43 @@ function buildJobCard(job) {
         ${job.url
           ? `<a href="${job.url}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">${getIcon("external-link", 13)} Apply Now</a>`
           : ""}
-        <button class="btn ${isSaved ? "btn-secondary" : "btn-ghost"} btn-sm" onclick="toggleSaveJob(${JSON.stringify(JSON.stringify(job))}, this)">
+        <button class="btn ${isSaved ? "btn-secondary" : "btn-ghost"} btn-sm" onclick="toggleSaveJobByKey('${escJs(key)}', this)">
           ${getIcon("bookmark", 13)} ${isSaved ? "Saved" : "Save"}
         </button>
-        <button class="btn btn-ghost btn-sm" onclick="trackApplication(${JSON.stringify(JSON.stringify(job))})">
+        <button class="btn btn-ghost btn-sm" onclick="trackApplicationByKey('${escJs(key)}')">
           ${getIcon("send", 13)} Track
         </button>
       </div>
     </div>`;
 }
 
-window.toggleSaveJob = function (jobStr, btn) {
-  const job = JSON.parse(jobStr);
+window.toggleSaveJobByKey = function (key, btn) {
+  const job = window.jobCache[key];
+  if (!job) {
+    showToast("Error locating job details.", "error");
+    return;
+  }
   const saved = getStoredSavedJobs();
   const idx = saved.findIndex(s => s.url === job.url);
   if (idx === -1) {
     saved.push({ ...job, saved_at: new Date().toISOString() });
     localStorage.setItem("savedJobs", JSON.stringify(saved));
     if (btn) { btn.innerHTML = `${getIcon("bookmark", 13)} Saved`; btn.className = "btn btn-secondary btn-sm"; }
-    showToast("Job saved.", "success");
+    showToast("Job saved to Saved Jobs!", "success");
   } else {
     saved.splice(idx, 1);
     localStorage.setItem("savedJobs", JSON.stringify(saved));
     if (btn) { btn.innerHTML = `${getIcon("bookmark", 13)} Save`; btn.className = "btn btn-ghost btn-sm"; }
-    showToast("Job removed from saved.", "info");
+    showToast("Job removed from Saved Jobs.", "info");
   }
+  // Refresh dashboard stats if active
+  if (typeof renderDashboard === "function") renderDashboard();
 };
 
-window.trackApplication = function (jobStr) {
-  const job = JSON.parse(jobStr);
+window.trackApplicationByKey = function (key) {
+  const job = window.jobCache[key];
+  if (!job) { showToast("Error locating job details.", "error"); return; }
+
   const apps = getStoredApplications();
   if (apps.some(a => a.url === job.url)) {
     showToast("Already tracking this application.", "info");
@@ -109,9 +128,10 @@ window.trackApplication = function (jobStr) {
   apps.push({ ...job, status: "Applied", applied_at: new Date().toISOString(), updated_at: new Date().toISOString() });
   localStorage.setItem("applications", JSON.stringify(apps));
   showToast("Application added to tracker.", "success");
+  navigateTo("applications");
 };
 
-/* ── Saved Jobs ────────────────────────────────────────────── */
+/* ── Saved Jobs Page ────────────────────────────────────────── */
 function renderSavedJobsPage() {
   const container = document.getElementById("savedJobsGrid");
   if (!container) return;
@@ -123,7 +143,7 @@ function renderSavedJobsPage() {
       <div class="empty-state">
         <div class="empty-icon">${getIcon("bookmark", 28)}</div>
         <div class="empty-title">No saved jobs yet</div>
-        <div class="empty-desc">Browse job recommendations and save the ones you are interested in.</div>
+        <div class="empty-desc">Browse job recommendations and click "Save" to keep track of your favorite roles.</div>
         <button class="btn btn-primary mt-3" onclick="navigateTo('jobs')">${getIcon("briefcase", 16)} Browse Jobs</button>
       </div>`;
     return;
@@ -131,7 +151,9 @@ function renderSavedJobsPage() {
 
   container.innerHTML = `
     <div class="jobs-grid">
-      ${saved.map(j => `
+      ${saved.map(j => {
+        const key = cacheJob(j);
+        return `
         <div class="job-card fade-in">
           <div class="job-card-top">
             <div style="flex:1;min-width:0">
@@ -147,14 +169,15 @@ function renderSavedJobsPage() {
           <p class="job-description">${escHtml((j.description || "").substring(0, 180))}...</p>
           <div class="job-card-actions">
             ${j.url ? `<a href="${j.url}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">${getIcon("external-link", 13)} Apply</a>` : ""}
-            <button class="btn btn-ghost btn-sm" onclick="trackApplication(${JSON.stringify(JSON.stringify(j))})">
+            <button class="btn btn-ghost btn-sm" onclick="trackApplicationByKey('${escJs(key)}')">
               ${getIcon("send", 13)} Track
             </button>
-            <button class="btn btn-ghost btn-sm" style="color:var(--color-danger)" onclick="removeSavedJob('${j.url}')">
+            <button class="btn btn-ghost btn-sm" style="color:var(--color-danger)" onclick="removeSavedJob('${escJs(j.url)}')">
               ${getIcon("trash", 13)} Remove
             </button>
           </div>
-        </div>`).join("")}
+        </div>`;
+      }).join("")}
     </div>`;
 }
 
@@ -163,6 +186,7 @@ window.removeSavedJob = function (url) {
   localStorage.setItem("savedJobs", JSON.stringify(saved));
   showToast("Job removed from saved.", "info");
   renderSavedJobsPage();
+  if (typeof renderDashboard === "function") renderDashboard();
 };
 
 /* ── Applications Tracker ──────────────────────────────────── */
@@ -182,15 +206,6 @@ function renderApplicationsPage() {
       </div>`;
     return;
   }
-
-  const statusColors = {
-    "Saved": "badge-neutral",
-    "Applied": "badge-info",
-    "Under Review": "badge-warning",
-    "Interview": "badge-primary",
-    "Offer": "badge-success",
-    "Rejected": "badge-danger",
-  };
 
   container.innerHTML = `
     <div class="table-wrap">
@@ -255,6 +270,7 @@ window.updateAppStatus = function (idx, status) {
     apps[idx].updated_at = new Date().toISOString();
     localStorage.setItem("applications", JSON.stringify(apps));
     showToast(`Status updated to "${status}".`, "success");
+    if (typeof renderDashboard === "function") renderDashboard();
   }
 };
 
@@ -264,9 +280,14 @@ window.deleteApplication = function (idx) {
   localStorage.setItem("applications", JSON.stringify(apps));
   showToast("Application removed.", "info");
   renderApplicationsPage();
+  if (typeof renderDashboard === "function") renderDashboard();
 };
 
-// Setup filter/sort controls
+function escJs(str) {
+  if (!str) return "";
+  return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("jobSkillFilter")?.addEventListener("input", renderJobsPage);
   document.getElementById("jobSortBy")?.addEventListener("change", renderJobsPage);

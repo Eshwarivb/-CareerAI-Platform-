@@ -12,8 +12,16 @@ function renderDashboard() {
   const apps = getStoredApplications();
   const lastContext = getLastResumeContext();
 
-  const atsScore = lastContext?.ats_score ?? "--";
-  const atsColor = atsScore === "--" ? "neutral" : atsScore >= 70 ? "success" : atsScore >= 45 ? "warning" : "danger";
+  // Find latest ATS score from all possible sources
+  let atsScore = localStorage.getItem("latestAtsScore");
+  if (!atsScore || atsScore === "null") {
+    atsScore = lastContext?.ats_score;
+  }
+  if (!atsScore && resumes.length > 0) {
+    const scoredResume = [...resumes].reverse().find(r => r.ats_score != null);
+    if (scoredResume) atsScore = scoredResume.ats_score;
+  }
+  atsScore = atsScore ? Number(atsScore) : "--";
 
   /* ── Stat Cards ─────────────────────────────────────── */
   const statsEl = document.getElementById("dashStats");
@@ -24,7 +32,7 @@ function renderDashboard() {
         <div class="stat-body">
           <div class="stat-value" style="color: ${atsScore === "--" ? "var(--color-text-muted)" : getScoreColor(atsScore)}">${atsScore}${atsScore !== "--" ? "%" : ""}</div>
           <div class="stat-label">Latest ATS Score</div>
-          <div class="stat-change neutral">${atsScore === "--" ? "Upload a resume to get started" : (atsScore >= 70 ? "Good match" : atsScore >= 45 ? "Needs improvement" : "Needs work")}</div>
+          <div class="stat-change neutral">${atsScore === "--" ? "Analyze a resume to get score" : (atsScore >= 70 ? "Good match" : atsScore >= 45 ? "Needs improvement" : "Needs work")}</div>
         </div>
       </div>
       <div class="stat-card">
@@ -138,13 +146,21 @@ function renderDashboard() {
 function renderMiniJobCard(job) {
   const matchPct = job.match_pct ?? 0;
   const matchClass = matchPct >= 70 ? "badge-success" : matchPct >= 40 ? "badge-warning" : "badge-neutral";
-  const initial = (job.company || "?").charAt(0).toUpperCase();
+  
+  // Cache job for safe click handling
+  window.jobCache = window.jobCache || {};
+  const key = job.url || `${job.title}_${job.company}`;
+  window.jobCache[key] = job;
+
+  const saved = getStoredSavedJobs();
+  const isSaved = saved.some(s => s.url === job.url);
+
   return `
     <div class="job-card">
       <div class="job-card-top">
         <div>
-          <div class="job-title">${escHtml(job.title || "Untitled Role")}</div>
-          <div class="job-company">${escHtml(job.company || "Unknown Company")}</div>
+          <div class="job-title">${escHtml(job.title || "Role")}</div>
+          <div class="job-company">${escHtml(job.company || "Company")}</div>
         </div>
         <span class="badge ${matchClass}">${matchPct}% match</span>
       </div>
@@ -153,21 +169,16 @@ function renderMiniJobCard(job) {
       </div>
       <div class="job-card-actions">
         ${job.url ? `<a href="${job.url}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">${getIcon("external-link", 13)} Apply</a>` : ""}
-        <button class="btn btn-secondary btn-sm" onclick="quickSaveJob(${JSON.stringify(JSON.stringify(job))})">${getIcon("bookmark", 13)} Save</button>
+        <button class="btn ${isSaved ? "btn-secondary" : "btn-ghost"} btn-sm" onclick="toggleSaveJobByKey('${escJs(key)}', this)">
+          ${getIcon("bookmark", 13)} ${isSaved ? "Saved" : "Save"}
+        </button>
       </div>
     </div>`;
 }
 
-function quickSaveJob(jobStr) {
-  const job = JSON.parse(jobStr);
-  const saved = getStoredSavedJobs();
-  if (saved.some(j => j.url === job.url)) {
-    showToast("Already in saved jobs.", "info");
-    return;
-  }
-  saved.push({ ...job, saved_at: new Date().toISOString() });
-  localStorage.setItem("savedJobs", JSON.stringify(saved));
-  showToast("Job saved successfully.", "success");
+function escJs(str) {
+  if (!str) return "";
+  return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
 }
 
 /* ── Shared localStorage helpers ───────────────────────────── */
@@ -206,6 +217,7 @@ function getScoreColor(score) {
 }
 
 // Make helpers globally available for other modules
+window.renderDashboard = renderDashboard;
 window.getStoredResumes = getStoredResumes;
 window.getStoredSavedJobs = getStoredSavedJobs;
 window.getStoredApplications = getStoredApplications;
@@ -213,4 +225,3 @@ window.getLastResumeContext = getLastResumeContext;
 window.formatDate = formatDate;
 window.escHtml = escHtml;
 window.getScoreColor = getScoreColor;
-window.quickSaveJob = quickSaveJob;

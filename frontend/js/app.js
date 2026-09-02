@@ -288,14 +288,19 @@ document.addEventListener("DOMContentLoaded", () => {
   buildSidebar();
   setupUserDropdown();
 
-  // Restore sidebar collapse state
+  // Ensure sidebar is expanded by default showing icons AND names
   const wasCollapsed = localStorage.getItem("sidebarCollapsed") === "1";
+  sidebarCollapsed = wasCollapsed;
   if (wasCollapsed && window.innerWidth > 768) {
-    sidebarCollapsed = true;
     document.getElementById("sidebar")?.classList.add("collapsed");
     document.getElementById("mainArea")?.classList.add("sidebar-collapsed");
     const btn = document.getElementById("sidebarToggleBtn");
     if (btn) btn.innerHTML = getIcon("chevron-right", 14);
+  } else {
+    document.getElementById("sidebar")?.classList.remove("collapsed");
+    document.getElementById("mainArea")?.classList.remove("sidebar-collapsed");
+    const btn = document.getElementById("sidebarToggleBtn");
+    if (btn) btn.innerHTML = getIcon("chevron-left", 14);
   }
 
   // Sidebar toggle button

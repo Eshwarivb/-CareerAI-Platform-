@@ -261,6 +261,12 @@ window.goToAts = function () {
 function renderJobCard(job) {
   const matchPct = job.match_pct ?? 0;
   const matchClass = matchPct >= 70 ? "badge-success" : matchPct >= 40 ? "badge-warning" : "badge-neutral";
+  window.jobCache = window.jobCache || {};
+  const key = job.url || `${job.title}_${job.company}`;
+  window.jobCache[key] = job;
+  const saved = getStoredSavedJobs();
+  const isSaved = saved.some(s => s.url === job.url);
+
   return `
     <div class="job-card">
       <div class="job-card-top">
@@ -276,9 +282,16 @@ function renderJobCard(job) {
       <p class="job-description">${escHtml((job.description || "").substring(0, 180))}...</p>
       <div class="job-card-actions">
         ${job.url ? `<a href="${job.url}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">${getIcon("external-link", 13)} Apply</a>` : ""}
-        <button class="btn btn-secondary btn-sm" onclick="quickSaveJob(${JSON.stringify(JSON.stringify(job))})">${getIcon("bookmark", 13)} Save</button>
+        <button class="btn ${isSaved ? "btn-secondary" : "btn-ghost"} btn-sm" onclick="toggleSaveJobByKey('${escJs(key)}', this)">
+          ${getIcon("bookmark", 13)} ${isSaved ? "Saved" : "Save"}
+        </button>
       </div>
     </div>`;
+}
+
+function escJs(str) {
+  if (!str) return "";
+  return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
 }
 
 window.renderJobCard = renderJobCard;

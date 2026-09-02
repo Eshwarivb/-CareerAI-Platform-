@@ -64,18 +64,37 @@ async function runAtsScore(file, jd) {
       return;
     }
 
-    // Save last ATS score to the most recent resume
+    // Always save latest ATS score to localStorage
+    localStorage.setItem("latestAtsScore", String(data.overall_score));
+
+    // Update last context
+    const ctx = getLastResumeContext() || {};
+    ctx.ats_score = data.overall_score;
+    localStorage.setItem("lastResumeContext", JSON.stringify(ctx));
+
+    // Save to stored resumes list
     const resumes = getStoredResumes();
     if (resumes.length > 0) {
       const last = resumes[resumes.length - 1];
       last.ats_score = data.overall_score;
       localStorage.setItem("storedResumes", JSON.stringify(resumes));
-
-      // Update last context
-      const ctx = getLastResumeContext() || {};
-      ctx.ats_score = data.overall_score;
-      localStorage.setItem("lastResumeContext", JSON.stringify(ctx));
+    } else {
+      // Create a resume record for this ATS check
+      const newResume = {
+        id: Date.now().toString(),
+        name: file.name,
+        skills: data.matched_keywords || [],
+        experience_level: "Fresher",
+        feedback: data.formatting_issues || [],
+        jobs: [],
+        uploaded_at: new Date().toISOString(),
+        analyzed_at: new Date().toISOString(),
+        ats_score: data.overall_score,
+      };
+      localStorage.setItem("storedResumes", JSON.stringify([newResume]));
     }
+
+    if (typeof renderDashboard === "function") renderDashboard();
 
     displayAtsResults(data);
 
